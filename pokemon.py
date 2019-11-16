@@ -32,6 +32,7 @@ class Pokemon:
             print(self.name + " is no longer knocked out.")
         self.current_health = min([self.current_health + gained_health, self.maximum_health])
         print (self.name + " now has " + str(self.current_health) + " health")
+        self.knocked_out = False
     
     def attack(self, attacking_pokemon):
         print(self.name + " is attacking " + attacking_pokemon.name + ".")
@@ -46,8 +47,10 @@ class Trainer:
         self.potion_quantity = potion_quantity
         self. active_pokemon = active_pokemon
         self. pokemon_list = pokemon_list
+
     def __repr__(self):
         return self.name
+    
     def use_potion(self):
         if self.potion_quantity == 0:
             print(self.name + " does not have any potions to use.")
@@ -55,9 +58,11 @@ class Trainer:
             print(self.name + " has healed " + self.pokemon_list[self.active_pokemon].name + " with a potion.")
             self.pokemon_list[self.active_pokemon].regain_health(self.pokemon_list[self.active_pokemon].maximum_health)
             self.potion_quantity -= 1
+    
     def attack(self, attacked_trainer):
         print(self.name + " uses their " + self.pokemon_list[self.active_pokemon].name + " to attack " + attacked_trainer.name + "\'s " + attacked_trainer.pokemon_list[attacked_trainer.active_pokemon].name)
         self.pokemon_list[self.active_pokemon].attack(attacked_trainer.pokemon_list[attacked_trainer.active_pokemon])
+    
     def switch_active_pokemon(self, new_active_pokemon):
         if (0 > new_active_pokemon) or (new_active_pokemon > len(self.pokemon_list) - 1):
             print("Unable to switch to that pokemon")
@@ -67,6 +72,7 @@ class Trainer:
             self.active_pokemon = new_active_pokemon
             print(self.name + " has switched pokemons. Now using: " + self.pokemon_list[self.active_pokemon].name + ".")
     
+
 def choose_players(trainers_list):
     for i in range(len(trainers_list)):
         print(str(i + 1) + " - " + trainers_list[i].name)
@@ -119,11 +125,18 @@ while(battle_continues):
         attacker.attack(defender)
         player1s_turn = not player1s_turn
     
+    if option == 2:
+        print("You currently can choose from: \n")
+        for i in range(len(attacker.pokemon_list)):
+            print(str(i + 1) + ": " + attacker.pokemon_list[i].name)
+        new_active_pokemon = int(input("Please choose from the list")) - 1
+        attacker.switch_active_pokemon(new_active_pokemon)
+
+    if option == 3:
+        attacker.use_potion()
+        player1s_turn = not player1s_turn
 
     if option == 99:
         battle_continues = False
-
-
-
 
 
